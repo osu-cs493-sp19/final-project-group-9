@@ -1,0 +1,45 @@
+{
+    "extends": [
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+	"plugins": ["@typescript-eslint"],
+    "rules": {
+        "indent": [
+            "error",
+            "tab",
+            {
+            	"CallExpression": {"arguments": 0},
+            	"SwitchCase": 1
+            }
+        ],
+		"@typescript-eslint/indent": [
+            "error",
+            "tab",
+            {
+            	"CallExpression": {"arguments": 0},
+            	"SwitchCase": 1
+            }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}
