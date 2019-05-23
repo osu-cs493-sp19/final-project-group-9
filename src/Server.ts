@@ -1,4 +1,6 @@
-import {ServerLoader, ServerSettings, GlobalAcceptMimesMiddleware} from "@tsed/common";
+import { ServerLoader, ServerSettings, GlobalAcceptMimesMiddleware } from "@tsed/common";
+import { $log } from "ts-log-debug";
+
 import express from "express";
 
 const rootDir = __dirname;
@@ -26,8 +28,7 @@ const rootDir = __dirname;
 export class Server extends ServerLoader
 {
 	/**
-	 * This method let you configure the express middleware required by your application to works.
-	 * @returns {Server}
+	 * This method lets you configure the express middleware required by your application.
 	 */
 	public $onMountingMiddlewares(): void
 	{
@@ -38,10 +39,10 @@ export class Server extends ServerLoader
 
 	public $onReady(): void
 	{
-		console.log("Server initialized");
+		$log.debug("Server initialized");
 	}
 
 	public $onServerInitError(error: Error): void {
-		console.log("Server encounter an init error =>", error);
+		$log.error("Server encountered an init error =>", error);
 	}
 }

@@ -1,11 +1,9 @@
+import { $log } from "ts-log-debug";
+
 import { Server } from "./Server";
 
-new Server().start()
-	.then((): void =>
-	{
-		console.log("Server started...");
-	})
-	.catch((error: Error): void =>
-	{
-		console.error(error);
-	});
+$log.debug("Start server...");
+new Server().start().catch((error: Error): void =>
+{
+	$log.error(error);
+});
