@@ -1,0 +1,31 @@
+version: "3"
+
+volumes:
+  db-volume:
+
+services:
+
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: tarpaulin-db
+      MYSQL_USER: tarpaulin
+      MYSQL_PASSWORD: tarpaulin
+    volumes:
+#      - ./init:/docker-entrypoint-initdb.d
+      - db-volume:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - db
+    depends_on:
+      - db
