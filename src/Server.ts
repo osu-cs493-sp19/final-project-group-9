@@ -1,5 +1,6 @@
 import { ServerLoader, ServerSettings, GlobalAcceptMimesMiddleware } from "@tsed/common";
 import { $log } from "ts-log-debug";
+import "@tsed/typeorm";
 
 import express from "express";
 
@@ -11,19 +12,36 @@ const rootDir = __dirname;
 	port: 8080,
 	mount:
 	{
-		"/": "${rootDir}/controllers/**/*.ts"
+		"/": `${rootDir}/controllers/**/*.ts`
 	},
 	componentsScan:
 	[
-		"${rootDir}/middleware/**/*.ts",
-	    "${rootDir}/services/**/*.ts",
-	    "${rootDir}/converters/**/*.ts"
+		`${rootDir}/middleware/**/*.ts`,
+	    `${rootDir}/services/**/*.ts`,
+	    `${rootDir}/converters/**/*.ts`
 	],
 	logger:
 	{
-		level: "warn"
+		level: "error"
 	},
- 	acceptMimes: ["application/json"]
+ 	acceptMimes: ["application/json"],
+	typeorm:
+	[
+		{
+			"name": "default",
+			"type": "mysql",
+			"host": "localhost",
+			"port": 3306,
+			"username": "tarpaulin",
+			"password": "tarpaulin",
+			"database": "tarpaulin-db",
+			"synchronize": false,
+			"logging": false,
+			"entities": [`${rootDir}/entities/**/*.ts`],
+			"migrations": [`${rootDir}/migration/**/*.ts`],
+			"subscribers": [`${rootDir}/subscriber/**/*.ts`]
+		}
+	]
 })
 export class Server extends ServerLoader
 {
@@ -42,7 +60,8 @@ export class Server extends ServerLoader
 		$log.debug("Server initialized");
 	}
 
-	public $onServerInitError(error: Error): void {
+	public $onServerInitError(error: Error): void
+	{
 		$log.error("Server encountered an init error =>", error);
 	}
 }
