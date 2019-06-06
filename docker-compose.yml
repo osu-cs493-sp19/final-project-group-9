@@ -13,7 +13,7 @@ services:
       MYSQL_USER: tarpaulin
       MYSQL_PASSWORD: tarpaulin
     volumes:
-#      - ./init:/docker-entrypoint-initdb.d
+      - ./db-init:/docker-entrypoint-initdb.d
       - db-volume:/var/lib/mysql
     ports:
       - 3306:3306
