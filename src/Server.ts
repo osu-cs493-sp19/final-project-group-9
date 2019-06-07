@@ -18,7 +18,8 @@ const rootDir = __dirname;
 	[
 		`${rootDir}/middleware/**/*.ts`,
 	    `${rootDir}/services/**/*.ts`,
-	    `${rootDir}/converters/**/*.ts`
+	    `${rootDir}/converters/**/*.ts`,
+		`${rootDir}/repos/**/*.ts`
 	],
 	logger:
 	{
