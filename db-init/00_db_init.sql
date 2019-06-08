@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 05, 2019 at 12:34 AM
+-- Generation Time: Jun 08, 2019 at 01:24 AM
 -- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
 -- PHP Version: 7.2.14
 
@@ -21,6 +21,59 @@ SET time_zone = "+00:00";
 --
 -- Database: `tarpaulin-db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `assignments`
+--
+
+CREATE TABLE `assignments` (
+  `courseId` int(11) NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `points` int(3) NOT NULL,
+  `due` datetime(6) NOT NULL,
+  `assignmentId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courses`
+--
+
+CREATE TABLE `courses` (
+  `subject` varchar(2) NOT NULL,
+  `number` varchar(3) NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `term` varchar(4) NOT NULL,
+  `instructorId` int(11) NOT NULL,
+  `courseId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `enrolled`
+--
+
+CREATE TABLE `enrolled` (
+  `userId` int(11) NOT NULL,
+  `courseId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `submission`
+--
+
+CREATE TABLE `submission` (
+  `assignmentId` int(11) NOT NULL,
+  `studentId` int(11) NOT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  `file` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -68,6 +121,34 @@ INSERT INTO `user_roles` (`role`) VALUES
 --
 
 --
+-- Indexes for table `assignments`
+--
+ALTER TABLE `assignments`
+  ADD PRIMARY KEY (`assignmentId`),
+  ADD KEY `courseId` (`courseId`);
+
+--
+-- Indexes for table `courses`
+--
+ALTER TABLE `courses`
+  ADD PRIMARY KEY (`courseId`),
+  ADD KEY `instructorId` (`instructorId`);
+
+--
+-- Indexes for table `enrolled`
+--
+ALTER TABLE `enrolled`
+  ADD KEY `userId` (`userId`,`courseId`),
+  ADD KEY `fk_courseId` (`courseId`);
+
+--
+-- Indexes for table `submission`
+--
+ALTER TABLE `submission`
+  ADD KEY `assignmentId` (`assignmentId`,`studentId`),
+  ADD KEY `fk_studentSub` (`studentId`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -86,6 +167,18 @@ ALTER TABLE `user_roles`
 --
 
 --
+-- AUTO_INCREMENT for table `assignments`
+--
+ALTER TABLE `assignments`
+  MODIFY `assignmentId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `courses`
+--
+ALTER TABLE `courses`
+  MODIFY `courseId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -94,6 +187,26 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `assignments`
+--
+ALTER TABLE `assignments`
+  ADD CONSTRAINT `fk_courseToAssignment` FOREIGN KEY (`courseId`) REFERENCES `courses` (`courseId`);
+
+--
+-- Constraints for table `enrolled`
+--
+ALTER TABLE `enrolled`
+  ADD CONSTRAINT `fk_courseId` FOREIGN KEY (`courseId`) REFERENCES `courses` (`courseId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `submission`
+--
+ALTER TABLE `submission`
+  ADD CONSTRAINT `fk_assignmentSub` FOREIGN KEY (`assignmentId`) REFERENCES `assignments` (`assignmentId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_studentSub` FOREIGN KEY (`studentId`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `users`
