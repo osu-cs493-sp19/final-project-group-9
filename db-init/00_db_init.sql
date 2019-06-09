@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 08, 2019 at 01:24 AM
+-- Generation Time: Jun 09, 2019 at 11:47 PM
 -- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
 -- PHP Version: 7.2.14
 
@@ -43,12 +43,12 @@ CREATE TABLE `assignments` (
 --
 
 CREATE TABLE `courses` (
-  `subject` varchar(2) NOT NULL,
+  `subject` varchar(8) NOT NULL,
   `number` varchar(3) NOT NULL,
   `title` varchar(256) NOT NULL,
   `term` varchar(4) NOT NULL,
   `instructorId` int(11) NOT NULL,
-  `courseId` int(11) NOT NULL
+  `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -131,7 +131,7 @@ ALTER TABLE `assignments`
 -- Indexes for table `courses`
 --
 ALTER TABLE `courses`
-  ADD PRIMARY KEY (`courseId`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `instructorId` (`instructorId`);
 
 --
@@ -176,7 +176,7 @@ ALTER TABLE `assignments`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `courseId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -192,13 +192,13 @@ ALTER TABLE `users`
 -- Constraints for table `assignments`
 --
 ALTER TABLE `assignments`
-  ADD CONSTRAINT `fk_courseToAssignment` FOREIGN KEY (`courseId`) REFERENCES `courses` (`courseId`);
+  ADD CONSTRAINT `fk_courseToAssignment` FOREIGN KEY (`courseId`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `enrolled`
 --
 ALTER TABLE `enrolled`
-  ADD CONSTRAINT `fk_courseId` FOREIGN KEY (`courseId`) REFERENCES `courses` (`courseId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_courseId` FOREIGN KEY (`courseId`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
