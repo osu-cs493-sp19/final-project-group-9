@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 10, 2019 at 10:21 PM
+-- Generation Time: Jun 10, 2019 at 10:30 PM
 -- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
 -- PHP Version: 7.2.14
 
@@ -33,14 +33,14 @@ CREATE TABLE `assignments` (
   `title` varchar(64) NOT NULL,
   `points` int(3) NOT NULL,
   `due` datetime(6) NOT NULL,
-  `assignmentId` int(11) NOT NULL
+  `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `assignments`
 --
 
-INSERT INTO `assignments` (`courseId`, `title`, `points`, `due`, `assignmentId`) VALUES
+INSERT INTO `assignments` (`courseId`, `title`, `points`, `due`, `id`) VALUES
 (1, 'CS ASSIGNMENT 1', 50, '2019-11-07 00:00:00.000000', 1);
 
 -- --------------------------------------------------------
@@ -190,7 +190,7 @@ INSERT INTO `user_roles` (`role`) VALUES
 -- Indexes for table `assignments`
 --
 ALTER TABLE `assignments`
-  ADD PRIMARY KEY (`assignmentId`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `courseId` (`courseId`);
 
 --
@@ -251,7 +251,7 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `assignments`
 --
 ALTER TABLE `assignments`
-  MODIFY `assignmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -299,7 +299,7 @@ ALTER TABLE `enrolled`
 -- Constraints for table `submission`
 --
 ALTER TABLE `submission`
-  ADD CONSTRAINT `fk_assignmentSub` FOREIGN KEY (`assignmentId`) REFERENCES `assignments` (`assignmentId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_assignmentSub` FOREIGN KEY (`assignmentId`) REFERENCES `assignments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_studentSub` FOREIGN KEY (`studentId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
