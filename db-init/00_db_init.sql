@@ -47,7 +47,7 @@ CREATE TABLE `courses` (
   `number` varchar(3) NOT NULL,
   `title` varchar(256) NOT NULL,
   `term` varchar(4) NOT NULL,
-  `year` year(4) NOT NULL,
+  `year` int(4) NOT NULL,
   `instructorId` int(11) NOT NULL,
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
