@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 09, 2019 at 11:59 PM
+-- Generation Time: Jun 10, 2019 at 12:05 AM
 -- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
 -- PHP Version: 7.2.14
 
@@ -230,7 +230,7 @@ ALTER TABLE `enrolled`
 --
 ALTER TABLE `submission`
   ADD CONSTRAINT `fk_assignmentSub` FOREIGN KEY (`assignmentId`) REFERENCES `assignments` (`assignmentId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_studentSub` FOREIGN KEY (`studentId`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `fk_studentSub` FOREIGN KEY (`studentId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
