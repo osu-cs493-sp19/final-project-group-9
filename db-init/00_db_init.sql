@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 09, 2019 at 11:51 PM
+-- Generation Time: Jun 09, 2019 at 11:59 PM
 -- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
 -- PHP Version: 7.2.14
 
@@ -47,6 +47,7 @@ CREATE TABLE `courses` (
   `number` varchar(3) NOT NULL,
   `title` varchar(256) NOT NULL,
   `term` varchar(4) NOT NULL,
+  `year` year(4) NOT NULL,
   `instructorId` int(11) NOT NULL,
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
