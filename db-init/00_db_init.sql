@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 10, 2019 at 12:05 AM
+-- Generation Time: Jun 10, 2019 at 10:21 PM
 -- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
 -- PHP Version: 7.2.14
 
@@ -36,6 +36,13 @@ CREATE TABLE `assignments` (
   `assignmentId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `assignments`
+--
+
+INSERT INTO `assignments` (`courseId`, `title`, `points`, `due`, `assignmentId`) VALUES
+(1, 'CS ASSIGNMENT 1', 50, '2019-11-07 00:00:00.000000', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -52,6 +59,13 @@ CREATE TABLE `courses` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `courses`
+--
+
+INSERT INTO `courses` (`subject`, `number`, `title`, `term`, `year`, `instructorId`, `id`) VALUES
+('CS', '101', 'COMPUTERS STUFF', 'Fall', 2019, 3, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -63,6 +77,13 @@ CREATE TABLE `enrolled` (
   `courseId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `enrolled`
+--
+
+INSERT INTO `enrolled` (`userId`, `courseId`) VALUES
+(4, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -73,6 +94,17 @@ CREATE TABLE `subjects` (
   `subject` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`subject`) VALUES
+('BI'),
+('CH'),
+('COMM'),
+('CS'),
+('ECE');
+
 -- --------------------------------------------------------
 
 --
@@ -80,11 +112,32 @@ CREATE TABLE `subjects` (
 --
 
 CREATE TABLE `submission` (
+  `id` int(11) NOT NULL,
   `assignmentId` int(11) NOT NULL,
   `studentId` int(11) NOT NULL,
   `timestamp` datetime(6) NOT NULL,
   `file` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `term`
+--
+
+CREATE TABLE `term` (
+  `term` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `term`
+--
+
+INSERT INTO `term` (`term`) VALUES
+('Fall'),
+('Spring'),
+('Summer'),
+('Winter');
 
 -- --------------------------------------------------------
 
@@ -106,7 +159,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`name`, `email`, `password`, `role`, `id`) VALUES
 ('Sung Kim', 'fake@email.com', '$2a$08$UtFz0pHzTuooNd.7fJaSW.7L/IaiMSvIqBH.dXEZak.INUjMoKd5q', 'admin', 1),
-('Trevor Hammock', 'hammockt@oregonstate.edu', '$2a$08$FZTSocehoCu.60MzmO2C.Oy./M5dXN1tCsalj3ohA9hjDUjqfZND6', 'admin', 2);
+('Trevor Hammock', 'hammockt@oregonstate.edu', '$2a$08$FZTSocehoCu.60MzmO2C.Oy./M5dXN1tCsalj3ohA9hjDUjqfZND6', 'admin', 2),
+('instructorPerson', 'instruct@email.com', '$2a$08$sp4Ghbm3jPtxb8AebwhTbuYVyMF9RPornSuBxUABrkcEgfDvPgqkC', 'instructor', 3),
+('studentKid', 'student@email.com', '$2a$08$TE3BvDiaX0cMfcDDxMrX8OzkWrf78qu7vtkst9F5bUlF2qGe0Mb8u', 'student', 4);
 
 -- --------------------------------------------------------
 
@@ -144,7 +199,8 @@ ALTER TABLE `assignments`
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`id`),
   ADD KEY `instructorId` (`instructorId`),
-  ADD KEY `subject` (`subject`);
+  ADD KEY `subject` (`subject`),
+  ADD KEY `term` (`term`);
 
 --
 -- Indexes for table `enrolled`
@@ -163,8 +219,15 @@ ALTER TABLE `subjects`
 -- Indexes for table `submission`
 --
 ALTER TABLE `submission`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `assignmentId` (`assignmentId`,`studentId`),
   ADD KEY `fk_studentSub` (`studentId`);
+
+--
+-- Indexes for table `term`
+--
+ALTER TABLE `term`
+  ADD PRIMARY KEY (`term`);
 
 --
 -- Indexes for table `users`
@@ -188,19 +251,25 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `assignments`
 --
 ALTER TABLE `assignments`
-  MODIFY `assignmentId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `assignmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `submission`
+--
+ALTER TABLE `submission`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -216,6 +285,7 @@ ALTER TABLE `assignments`
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
+  ADD CONSTRAINT `fk_term` FOREIGN KEY (`term`) REFERENCES `term` (`term`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `subject` FOREIGN KEY (`subject`) REFERENCES `subjects` (`subject`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
