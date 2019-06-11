@@ -6,17 +6,21 @@ import { UserPayloadMiddleware } from "../middleware/UserPayloadMiddleware";
 import { User } from "../models/User";
 import { UserRepo } from "../repos/UserRepo";
 import { UserJwtRepo, UserPayload } from "../repos/UserJwtRepo";
+import { Course } from "../models/Course";
+import { CourseRepo } from "../repos/CourseRepo";
 
 @Controller("/users")
 export class UsersController
 {
 	private userRepo: UserRepo;
 	private userJwtRepo: UserJwtRepo;
+	private courseRepo: CourseRepo;
 
-	public constructor(userRepo: UserRepo, userJwtRepo: UserJwtRepo)
+	public constructor(userRepo: UserRepo, userJwtRepo: UserJwtRepo, courseRepo: CourseRepo)
 	{
 		this.userRepo = userRepo;
 		this.userJwtRepo = userJwtRepo;
+		this.courseRepo = courseRepo;
 	}
 
 	@Post("/")
@@ -60,10 +64,20 @@ export class UsersController
 		if(userPayload.userId != id)
 			throw new Forbidden("The request was not made by an authenticated User satisfying the authorization criteria described above.");
 
-		const user = await this.userRepo.getById(id);
-		if(!user)
+		const enrolledCourses = await this.userRepo.getEnrolledCourses(id);
+		if(!enrolledCourses)
 			throw new NotFound("Specified User `id` not found.");
 
-		return user;
+		switch(userPayload.role)
+		{
+			case "instructor":
+				const query = new Course();
+				query.instructorId = id;
+				return this.courseRepo.getList(query);
+			case "student":
+				return enrolledCourses;
+		}
+
+		return [];
 	}
 }

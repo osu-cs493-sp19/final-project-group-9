@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+
+import { CourseEntity } from "./CourseEntity";
 
 @Entity("users")
 export class UserEntity
@@ -17,4 +19,21 @@ export class UserEntity
 
 	@Column()
 	public role: "admin" | "instructor" | "student";
+
+	@ManyToMany(type => CourseEntity, course => course.students)
+	@JoinTable(
+	{
+		name: "enrolled",
+		joinColumn:
+		{
+			name: "userId",
+			referencedColumnName: "id"
+		},
+		inverseJoinColumn:
+		{
+			name: "courseId",
+			referencedColumnName: "id"
+		}
+	})
+	public enrolledCourses: CourseEntity[];
 }

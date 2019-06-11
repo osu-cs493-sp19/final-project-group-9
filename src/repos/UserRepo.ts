@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import { UserEntityService } from "../services/UserEntityService";
 import { User } from "../models/User";
 import { UserEntity } from "../entities/UserEntity";
+import { Course } from "../models/Course";
+import { CourseEntity } from "../entities/CourseEntity";
 
 @Injectable()
 @Scope(ProviderScope.SINGLETON)
@@ -48,5 +50,22 @@ export class UserRepo
 			return null;
 
 		return userEntities[0];
+	}
+
+	public async getEnrolledCourses(id: number): Promise<Course[] | null>
+	{
+		const userEntities = await this.userEntityService.find(
+		{
+			where: { id },
+			relations: ["enrolledCourses"]
+		});
+
+		if(userEntities.length != 1)
+			return null;
+
+		return userEntities[0].enrolledCourses.map((courseEntity: CourseEntity): Course =>
+		{
+			return Course.fromCourseEntity(courseEntity);
+		});
 	}
 }

@@ -17,8 +17,8 @@ const rootDir = __dirname;
 	componentsScan:
 	[
 		`${rootDir}/middleware/**/*.ts`,
-	    `${rootDir}/services/**/*.ts`,
-	    `${rootDir}/converters/**/*.ts`,
+		`${rootDir}/services/**/*.ts`,
+		`${rootDir}/converters/**/*.ts`,
 		`${rootDir}/repos/**/*.ts`
 	],
 	logger:
