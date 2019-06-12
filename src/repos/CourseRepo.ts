@@ -54,6 +54,22 @@ export class CourseRepo
 		});
 	}
 
+	public async getPaginatedList(course: Course, page: number): Promise<Course[]>
+	{
+		const skip = (page-1)*10;
+
+		const courseEntities = await this.courseEntityService.find(
+		{
+			where: course,
+			skip,
+			take: 10
+		});
+		return courseEntities.map((courseEntity: CourseEntity): Course =>
+		{
+			return Course.fromCourseEntity(courseEntity);
+		});
+	}
+
 	public async getStudents(id: number): Promise<User[] | null>
 	{
 		const courseEntities = await this.courseEntityService.find(

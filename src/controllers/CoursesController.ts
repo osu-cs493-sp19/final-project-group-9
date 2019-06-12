@@ -35,6 +35,8 @@ export class CoursesController
 		const course = new Course();
 
 		//TODO: should find a cleaner way to do this
+		if(page == undefined)
+			page = 1;
 		if(subject != undefined)
 			course.subject = subject;
 		if(number != undefined)
@@ -42,7 +44,7 @@ export class CoursesController
 		if(term != undefined)
 			course.term = term;
 
-		return this.courseRepo.getList(course);
+		return this.courseRepo.getPaginatedList(course, page);
 	}
 
 	@Post("/")

@@ -56,4 +56,25 @@ export class SubmissionRepo
 			return submission;
 		});
 	}
+
+	public async getPaginatedList(submission: Submission, page: number): Promise<Submission[]>
+	{
+		const skip = (page-1)*10;
+		const baseUrl = `/${basename(this.submissionLocation)}/`;
+
+		const submissionEntities = await this.submissionEntityService.find(
+		{
+			where: submission,
+			skip,
+			take: 10
+		});
+
+		return submissionEntities.map((submissionEntity: SubmissionEntity): Submission =>
+		{
+			const submission = Submission.fromSubmissionEntity(submissionEntity);
+			submission.file = baseUrl + basename(submission.file);
+
+			return submission;
+		});
+	}
 }

@@ -1,5 +1,5 @@
 import {
-	BodyParams, Locals, MergeParams, PathParams,
+	BodyParams, Locals, MergeParams, PathParams, QueryParams,
 	Controller,
 	Delete, Get, Patch, Post,
 	Next,
@@ -99,15 +99,19 @@ export class AssignmentController
 	public async getSubmissions(
 		@Locals("assignment") assignment: Assignment,
 		@Locals("userPayload") userPayload: UserPayload,
-		@Locals("instructorId") instructorId: number
+		@Locals("instructorId") instructorId: number,
+		@QueryParams("page") page?: number
 	): Promise<Submission[]>
 	{
 		if(!(userPayload.role == "admin" || (userPayload.role == "instructor" && userPayload.userId == instructorId)))
 			throw new Forbidden("The request was not made by an authenticated User satisfying the authorization criteria described above.");
 
+		if(page == undefined)
+			page = 1;
+
 		const query = new Submission();
 		query.assignmentId = assignment.id;
-		return this.submissionRepo.getList(query);
+		return this.submissionRepo.getPaginatedList(query, page);
 	}
 
 	@Post("/submissions")
@@ -142,11 +146,8 @@ export class AssignmentController
 		}
 		catch(error)
 		{
-			throw error;
-		}
-		finally
-		{
 			unlinkSync(file.path);
+			throw error;
 		}
 	}
 }
