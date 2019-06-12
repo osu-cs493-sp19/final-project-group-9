@@ -42,7 +42,8 @@ const rootDir = __dirname;
 			"migrations": [`${rootDir}/migration/**/*.ts`],
 			"subscribers": [`${rootDir}/subscriber/**/*.ts`]
 		}
-	]
+	],
+	submissionLocation: `${process.cwd()}/submissions`
 })
 export class Server extends ServerLoader
 {

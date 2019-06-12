@@ -1,4 +1,4 @@
-import { Injectable, ProviderScope, Scope } from "@tsed/common";
+import { Injectable, ProviderScope, Scope, Value } from "@tsed/common";
 import { BadRequest } from "ts-httpexceptions";
 import { randomBytes } from "crypto";
 import { renameSync } from "fs";
@@ -12,12 +12,13 @@ import { SubmissionEntity } from "../entities/SubmissionEntity";
 export class SubmissionRepo
 {
 	private submissionEntityService: SubmissionEntityService;
-	private directoryLocation: string;
+
+	@Value("submissionLocation")
+	private submissionLocation: string;
 
 	public constructor(submissionEntityService: SubmissionEntityService)
 	{
 		this.submissionEntityService = submissionEntityService;
-		this.directoryLocation = `${process.cwd()}/submissions`;
 	}
 
 	public async create(submission: Submission, file: Express.Multer.File): Promise<string>
@@ -26,7 +27,7 @@ export class SubmissionRepo
 			throw new BadRequest("The request body was either not present or did not contain a valid Submission object.");
 
 		submission.id = randomBytes(8).toString("hex");
-		submission.file = `${this.directoryLocation}/${submission.id}`;
+		submission.file = `${this.submissionLocation}/${submission.id}`;
 		const result = await submission.validate();
 		if(!result)
 		{
