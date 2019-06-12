@@ -80,6 +80,7 @@ export class AssignmentController
 	}
 
 	@Delete("/")
+	@Use(JwtMiddleware, UserPayloadMiddleware)
 	@Status(204)
 	public async delete(
 		@Locals("assignment") assignment: Assignment,
@@ -94,11 +95,19 @@ export class AssignmentController
 	}
 
 	@Get("/submissions")
-	public getSubmissions(@Locals("assignment") assignment: Assignment): Submission[]
+	@Use(JwtMiddleware, UserPayloadMiddleware)
+	public async getSubmissions(
+		@Locals("assignment") assignment: Assignment,
+		@Locals("userPayload") userPayload: UserPayload,
+		@Locals("instructorId") instructorId: number
+	): Promise<Submission[]>
 	{
-		console.log(assignment);
+		if(!(userPayload.role == "admin" || (userPayload.role == "instructor" && userPayload.userId == instructorId)))
+			throw new Forbidden("The request was not made by an authenticated User satisfying the authorization criteria described above.");
 
-		return [];
+		const query = new Submission();
+		query.assignmentId = assignment.id;
+		return this.submissionRepo.getList(query);
 	}
 
 	@Post("/submissions")

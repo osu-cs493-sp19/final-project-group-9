@@ -2,6 +2,7 @@ import { Injectable, ProviderScope, Scope, Value } from "@tsed/common";
 import { BadRequest } from "ts-httpexceptions";
 import { randomBytes } from "crypto";
 import { renameSync } from "fs";
+import { basename } from "path";
 
 import { SubmissionEntityService } from "../services/SubmissionEntityService";
 import { Submission } from "../models/Submission";
@@ -41,5 +42,18 @@ export class SubmissionRepo
 		renameSync(file.path, submission.file);
 
 		return newSubmission.id;
+	}
+
+	public async getList(submission: Submission): Promise<Submission[]>
+	{
+		const baseUrl = `/${basename(this.submissionLocation)}/`;
+		const submissionEntities = await this.submissionEntityService.find({ where: submission });
+		return submissionEntities.map((submissionEntity: SubmissionEntity): Submission =>
+		{
+			const submission = Submission.fromSubmissionEntity(submissionEntity);
+			submission.file = baseUrl + basename(submission.file);
+
+			return submission;
+		});
 	}
 }
