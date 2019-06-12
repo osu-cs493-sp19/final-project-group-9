@@ -7,7 +7,8 @@ import {
 	Use
 } from "@tsed/common";
 import { MulterOptions, MultipartFile } from "@tsed/multipartfiles";
-import { Forbidden, NotFound } from "ts-httpexceptions";
+import { BadRequest, Forbidden, NotFound } from "ts-httpexceptions";
+import { unlinkSync } from "fs";
 
 import { JwtMiddleware } from "../middleware/JwtMiddleware";
 import { UserPayloadMiddleware } from "../middleware/UserPayloadMiddleware";
@@ -17,6 +18,7 @@ import { AssignmentRepo } from "../repos/AssignmentRepo";
 import { CourseRepo } from "../repos/CourseRepo";
 import { Submission } from "../models/Submission";
 import { EnrolledRepo } from "../repos/EnrolledRepo";
+import { SubmissionRepo } from "../repos/SubmissionRepo";
 
 @Controller("/:id")
 @MergeParams()
@@ -25,12 +27,14 @@ export class AssignmentController
 	private assignmentRepo: AssignmentRepo;
 	private courseRepo: CourseRepo;
 	private enrolledRepo: EnrolledRepo;
+	private submissionRepo: SubmissionRepo;
 
-	public constructor(assignmentRepo: AssignmentRepo, courseRepo: CourseRepo, enrolledRepo: EnrolledRepo)
+	public constructor(assignmentRepo: AssignmentRepo, courseRepo: CourseRepo, enrolledRepo: EnrolledRepo, submissionRepo: SubmissionRepo)
 	{
 		this.assignmentRepo = assignmentRepo;
 		this.courseRepo = courseRepo;
 		this.enrolledRepo = enrolledRepo;
+		this.submissionRepo = submissionRepo;
 	}
 
 	@Use()
@@ -108,22 +112,32 @@ export class AssignmentController
 		@Locals("userPayload") userPayload: UserPayload
 	): Promise<object>
 	{
-		if(userPayload.role != "student")
-			throw new Forbidden("The request was not made by an authenticated User satisfying the authorization criteria described above.");
+		try
+		{
+			if(userPayload.role != "student")
+				throw new Forbidden("The request was not made by an authenticated User satisfying the authorization criteria described above.");
 
-		//file will be === undefined if contentType is not multipart/formdata
+			//file will be === undefined if contentType is not multipart/formdata
 
-		//validate submission
-		//make sure that the assignmentId and studentId match
-		//make sure that the user is enrolledIn the assignment's course
-		//create the new url
-		//insert into the db
-		//if any of the previous steps causes an error, remove the file
-		//need to move out of ".tmp" to "uploads"
+			//try to submit to the wrong assignment or try to submit for someone else
+			if(submission.assignmentId !== assignment.id || submission.studentId !== userPayload.userId)
+				throw new BadRequest("The request body was either not present or did not contain a valid Submission object.");
 
-		const inCourse = await this.enrolledRepo.enrolledIn(userPayload.userId, assignment.courseId);
-		console.log(inCourse);
+			const inCourse = await this.enrolledRepo.enrolledIn(userPayload.userId, assignment.courseId);
+			if(!inCourse)
+				throw new BadRequest("The request body was either not present or did not contain a valid Submission object.");
 
-		return { id: 0 };
+			const newSubmissionId = await this.submissionRepo.create(submission, file);
+
+			return { id: newSubmissionId };
+		}
+		catch(error)
+		{
+			throw error;
+		}
+		finally
+		{
+			unlinkSync(file.path);
+		}
 	}
 }

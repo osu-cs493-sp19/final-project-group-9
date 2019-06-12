@@ -1,10 +1,14 @@
 import { Property } from "@tsed/common";
-import { IsInt, IsISO8601, IsUrl } from "class-validator";
+import { IsInt, IsISO8601, IsString, Length } from "class-validator";
 
 import { ValidatedModel } from "./ValidatedModel";
 
 export class Submission extends ValidatedModel
 {
+	@Property()
+	@Length(16)
+	public id: string;
+
 	@Property()
 	@IsInt()
 	public assignmentId: number;
@@ -15,9 +19,9 @@ export class Submission extends ValidatedModel
 
 	@Property()
 	@IsISO8601()
-	public timestamp: Date;
+	public timestamp: string;
 
 	@Property()
-	@IsUrl()
+	@IsString()
 	public file: string;
 }

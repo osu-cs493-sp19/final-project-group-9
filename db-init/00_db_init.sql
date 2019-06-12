@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 10, 2019 at 10:30 PM
--- Server version: 10.3.15-MariaDB-1:10.3.15+maria~bionic
+-- Generation Time: Jun 12, 2019 at 09:47 AM
+-- Server version: 10.3.14-MariaDB-1:10.3.14+maria~bionic
 -- PHP Version: 7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -112,7 +112,7 @@ INSERT INTO `subjects` (`subject`) VALUES
 --
 
 CREATE TABLE `submission` (
-  `id` int(11) NOT NULL,
+  `id` varchar(16) NOT NULL,
   `assignmentId` int(11) NOT NULL,
   `studentId` int(11) NOT NULL,
   `timestamp` datetime(6) NOT NULL,
@@ -258,12 +258,6 @@ ALTER TABLE `assignments`
 --
 ALTER TABLE `courses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `submission`
---
-ALTER TABLE `submission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
