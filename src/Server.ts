@@ -1,6 +1,9 @@
 import { ServerLoader, ServerSettings, GlobalAcceptMimesMiddleware } from "@tsed/common";
 import { $log } from "ts-log-debug";
 import "@tsed/typeorm";
+import redis from "redis";
+import RateLimit from "express-rate-limit";
+import RedisStore from "rate-limit-redis";
 
 import express from "express";
 
@@ -52,9 +55,18 @@ export class Server extends ServerLoader
 	 */
 	public $onMountingMiddlewares(): void
 	{
+		const redisClient = redis.createClient(6379, "localhost");
+		const redisLimiter = new RateLimit(
+		{
+			store: new RedisStore({ client: redisClient }),
+			max: 10,
+			delayMS: 0
+		});
+
 		this
 			.use(GlobalAcceptMimesMiddleware)
-			.use(express.json());
+			.use(express.json())
+			.use(redisLimiter);
 	}
 
 	public $onReady(): void
