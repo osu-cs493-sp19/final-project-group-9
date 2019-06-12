@@ -3,6 +3,7 @@ import { $log } from "ts-log-debug";
 import "@tsed/typeorm";
 import redis from "redis";
 import RateLimit from "express-rate-limit";
+//@ts-ignore
 import RedisStore from "rate-limit-redis";
 
 import express from "express";
@@ -46,7 +47,12 @@ const rootDir = __dirname;
 			"subscribers": [`${rootDir}/subscriber/**/*.ts`]
 		}
 	],
-	submissionLocation: `${process.cwd()}/submissions`
+	submissionLocation: `${process.cwd()}/submissions`,
+	redis:
+	{
+		host: "localhost",
+		port: 6379
+	}
 })
 export class Server extends ServerLoader
 {
@@ -55,12 +61,11 @@ export class Server extends ServerLoader
 	 */
 	public $onMountingMiddlewares(): void
 	{
-		const redisClient = redis.createClient(6379, "localhost");
+		const redisClient = redis.createClient(this.settings.get("redis.port"), this.settings.get("redis.host"));
 		const redisLimiter = new RateLimit(
 		{
 			store: new RedisStore({ client: redisClient }),
-			max: 10,
-			delayMS: 0
+			max: 100
 		});
 
 		this
