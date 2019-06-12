@@ -25,7 +25,7 @@ const rootDir = __dirname;
 	{
 		level: "error"
 	},
- 	acceptMimes: ["application/json"],
+ 	acceptMimes: ["application/json", "multipart/form-data"],
 	typeorm:
 	[
 		{
