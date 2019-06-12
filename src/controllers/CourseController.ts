@@ -16,6 +16,7 @@ import { Course } from "../models/Course";
 import { Assignment } from "../models/Assignment";
 import { CourseRepo } from "../repos/CourseRepo";
 import { AssignmentRepo } from "../repos/AssignmentRepo";
+import { EnrolledRepo } from "../repos/EnrolledRepo";
 
 @Controller("/:id")
 @MergeParams()
@@ -23,11 +24,13 @@ export class CourseController
 {
 	private courseRepo: CourseRepo;
 	private assignmentRepo: AssignmentRepo;
+	private enrolledRepo: EnrolledRepo;
 
-	public constructor(courseRepo: CourseRepo, assignmentRepo: AssignmentRepo)
+	public constructor(courseRepo: CourseRepo, assignmentRepo: AssignmentRepo, enrolledRepo: EnrolledRepo)
 	{
 		this.courseRepo = courseRepo;
 		this.assignmentRepo = assignmentRepo;
+		this.enrolledRepo = enrolledRepo;
 	}
 
 	@Use()
@@ -110,8 +113,10 @@ export class CourseController
 		if(!(userPayload.role == "admin" || (userPayload.role == "instructor" && userPayload.userId == course.instructorId)))
 			throw new Forbidden("The request was not made by an authenticated User satisfying the authorization criteria described above.");
 
-		//need some way to batch remove
-		//need some way to batch add
+		if(removeIds && removeIds.length > 0)
+			await this.enrolledRepo.removeFromCourse(removeIds, course.id);
+		if(addIds && addIds.length > 0)
+			await this.enrolledRepo.addToCourse(addIds, course.id);
 	}
 
 	@Get("/roster")

@@ -20,4 +20,23 @@ export class EnrolledRepo
 
 		return numCourses != 0;
 	}
+
+	public async addToCourse(userIds: number[], courseId: number): Promise<void>
+	{
+		const newEntities = userIds.map((userId: number): EnrolledEntity =>
+		{
+			const enrolledEntity = new EnrolledEntity();
+			enrolledEntity.userId = userId;
+			enrolledEntity.courseId = courseId;
+
+			return enrolledEntity;
+		});
+
+		await this.enrolledEntityService.bulkSave(newEntities);
+	}
+
+	public async removeFromCourse(userIds: number[], courseId: number): Promise<void>
+	{
+		await this.enrolledEntityService.bulkDeleteUsers(userIds, courseId);
+	}
 }
