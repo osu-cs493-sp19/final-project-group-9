@@ -56,8 +56,7 @@ export class AssignmentRepo
 
 	public async update(assignment: Assignment, newAssignment: Assignment): Promise<void>
 	{
-		await newAssignment.validate();
-		assignment.update(newAssignment);
+		await assignment.update(newAssignment);
 
 		return this.assignmentEntityService.update(AssignmentEntity.fromAssignment(assignment));
 	}

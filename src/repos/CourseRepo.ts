@@ -97,8 +97,7 @@ export class CourseRepo
 
 	public async update(course: Course, newCourse: Course): Promise<void>
 	{
-		await newCourse.validate();
-		course.update(newCourse);
+		await course.update(newCourse);
 
 		return this.courseEntityService.update(CourseEntity.fromCourse(course));
 	}

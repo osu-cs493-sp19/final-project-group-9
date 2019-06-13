@@ -65,12 +65,16 @@ export class Course extends ValidatedModel
 			&& this.instructorId === course.instructorId;
 	}
 
-	public update(course: Course): void
+	public async update(course: Course): Promise<void>
 	{
 		if(course.equals(this))
 			throw new BadRequest("The request body was either not present or did not contain any fields related to Course objects.");
 
 		if(this.id != course.id)
+			throw new BadRequest("The request body was either not present or did not contain any fields related to Course objects.");
+
+		const result = await course.validate();
+		if(!result)
 			throw new BadRequest("The request body was either not present or did not contain any fields related to Course objects.");
 
 		Object.assign(this, course);
