@@ -100,7 +100,8 @@ export class AssignmentController
 		@Locals("assignment") assignment: Assignment,
 		@Locals("userPayload") userPayload: UserPayload,
 		@Locals("instructorId") instructorId: number,
-		@QueryParams("page") page?: number
+		@QueryParams("page") page?: number,
+		@QueryParams("studentId") studentId?: number
 	): Promise<Submission[]>
 	{
 		if(!(userPayload.role == "admin" || (userPayload.role == "instructor" && userPayload.userId == instructorId)))
@@ -111,6 +112,10 @@ export class AssignmentController
 
 		const query = new Submission();
 		query.assignmentId = assignment.id;
+
+		if(studentId != undefined)
+			query.studentId = studentId;
+
 		return this.submissionRepo.getPaginatedList(query, page);
 	}
 
