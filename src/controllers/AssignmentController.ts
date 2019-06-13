@@ -1,5 +1,5 @@
 import {
-	BodyParams, Locals, MergeParams, PathParams, QueryParams,
+	BodyParams, Locals, MergeParams, PathParams, QueryParams, Required,
 	Controller,
 	Delete, Get, Patch, Post,
 	Next,
@@ -8,7 +8,7 @@ import {
 } from "@tsed/common";
 import { MulterOptions, MultipartFile } from "@tsed/multipartfiles";
 import { BadRequest, Forbidden, NotFound } from "ts-httpexceptions";
-import { unlinkSync } from "fs";
+import { existsSync, unlinkSync } from "fs";
 
 import { JwtMiddleware } from "../middleware/JwtMiddleware";
 import { UserPayloadMiddleware } from "../middleware/UserPayloadMiddleware";
@@ -126,7 +126,7 @@ export class AssignmentController
 	public async addSubmission(
 		@Locals("assignment") assignment: Assignment,
 		@BodyParams() submission: Submission,
-		@MultipartFile("file") file: Express.Multer.File,
+		@Required() @MultipartFile("file") file: Express.Multer.File,
 		@Locals("userPayload") userPayload: UserPayload
 	): Promise<object>
 	{
@@ -151,8 +151,12 @@ export class AssignmentController
 		}
 		catch(error)
 		{
-			unlinkSync(file.path);
 			throw error;
+		}
+		finally
+		{
+			if(existsSync(file.path))
+				unlinkSync(file.path);
 		}
 	}
 }
