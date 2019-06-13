@@ -18,7 +18,7 @@ export class ErrorHandler extends GlobalErrorHandlerMiddleware
 		}
 		else if(error.code && error.code.includes("ER_NO_REFERENCED_ROW"))
 		{
-			return response.status(400).send({ error: "The request body was either not present or did not contain a valid Model object." })
+			return response.status(400).send({ error: "The request body was either not present or did not contain a valid Model object." });
 		}
 
 		$log.error(error);
