@@ -319,6 +319,7 @@ ALTER TABLE `assignments`
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
+  ADD CONSTRAINT `fk_instructorId` FOREIGN KEY (`instructorId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_term` FOREIGN KEY (`term`) REFERENCES `term` (`term`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `subject` FOREIGN KEY (`subject`) REFERENCES `subjects` (`subject`) ON DELETE CASCADE ON UPDATE CASCADE;
 
