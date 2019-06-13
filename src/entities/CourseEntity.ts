@@ -49,9 +49,7 @@ export class CourseEntity
 		const courseEntity = new CourseEntity();
 		Object.assign(courseEntity, course);
 
-		const term = course.term.substring(0,2);
-		const year = parseInt(course.term.substring(2));
-
+		const term = (!course.term)? undefined: course.term.substring(0,2);
 		switch(term)
 		{
 			case "fa": courseEntity.term = "Fall"; break;
@@ -60,7 +58,11 @@ export class CourseEntity
 			case "su": courseEntity.term = "Summer"; break;
 		}
 
-		courseEntity.year = year + 2000;
+		if(course.term)
+		{
+			const year = parseInt(course.term.substring(2));
+			courseEntity.year = year + 2000;
+		}
 
 		return courseEntity;
 	}
