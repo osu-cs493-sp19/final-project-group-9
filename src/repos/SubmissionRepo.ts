@@ -47,7 +47,11 @@ export class SubmissionRepo
 	public async getList(submission: Submission): Promise<Submission[]>
 	{
 		const baseUrl = `/${basename(this.submissionLocation)}/`;
-		const submissionEntities = await this.submissionEntityService.find({ where: submission });
+		const submissionEntities = await this.submissionEntityService.find(
+		{
+			where: SubmissionEntity.fromSubmission(submission)
+		});
+
 		return submissionEntities.map((submissionEntity: SubmissionEntity): Submission =>
 		{
 			const submission = Submission.fromSubmissionEntity(submissionEntity);
@@ -64,7 +68,7 @@ export class SubmissionRepo
 
 		const submissionEntities = await this.submissionEntityService.find(
 		{
-			where: submission,
+			where: SubmissionEntity.fromSubmission(submission),
 			skip,
 			take: 10
 		});

@@ -47,7 +47,11 @@ export class CourseRepo
 
 	public async getList(course: Course): Promise<Course[]>
 	{
-		const courseEntities = await this.courseEntityService.find({ where: course });
+		const courseEntities = await this.courseEntityService.find(
+		{
+			where: CourseEntity.fromCourse(course)
+		});
+
 		return courseEntities.map((courseEntity: CourseEntity): Course =>
 		{
 			return Course.fromCourseEntity(courseEntity);
@@ -60,10 +64,11 @@ export class CourseRepo
 
 		const courseEntities = await this.courseEntityService.find(
 		{
-			where: course,
+			where: CourseEntity.fromCourse(course),
 			skip,
 			take: 10
 		});
+
 		return courseEntities.map((courseEntity: CourseEntity): Course =>
 		{
 			return Course.fromCourseEntity(courseEntity);

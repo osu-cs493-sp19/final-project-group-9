@@ -43,7 +43,11 @@ export class AssignmentRepo
 
 	public async getList(assignment: Assignment): Promise<Assignment[]>
 	{
-		const assignmentEntities = await this.assignmentEntityService.find({ where: assignment });
+		const assignmentEntities = await this.assignmentEntityService.find(
+		{
+			where: AssignmentEntity.fromAssignment(assignment)
+		});
+
 		return assignmentEntities.map((assignmentEntity: AssignmentEntity): Assignment =>
 		{
 			return Assignment.fromAssignmentEntity(assignmentEntity);
