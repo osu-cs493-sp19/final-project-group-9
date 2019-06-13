@@ -1,6 +1,6 @@
 import { Injectable, ProviderScope, Scope } from "@tsed/common";
 import { Unauthorized } from "ts-httpexceptions";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import { UserEntity } from "../entities/UserEntity";
