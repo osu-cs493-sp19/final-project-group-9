@@ -16,7 +16,7 @@ const DB_USER = process.env.DB_USER;
 const DB_PORT = process.env.DB_PORT || 3306;
 const DB_PASS = process.env.DB_PASS;
 const REDIS_HOST = process.env.REDIS_HOST || "localhost";
-const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
 
 @ServerSettings(
 {
