@@ -25,7 +25,8 @@ export class SubmissionEntity
 		const submissionEntity = new SubmissionEntity();
 		Object.assign(submissionEntity, submission);
 
-		submissionEntity.timestamp = new Date(submission.timestamp);
+		if(submission.timestamp)
+			submissionEntity.timestamp = new Date(submission.timestamp);
 
 		return submissionEntity;
 	}

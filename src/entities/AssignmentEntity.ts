@@ -25,7 +25,8 @@ export class AssignmentEntity
 		const assignmentEntity = new AssignmentEntity();
 		Object.assign(assignmentEntity, assignment);
 
-		assignmentEntity.due = new Date(assignment.due);
+		if(assignment.due)
+			assignmentEntity.due = new Date(assignment.due);
 
 		return assignmentEntity;
 	}
