@@ -17,9 +17,9 @@ export class ErrorHandler extends GlobalErrorHandlerMiddleware
 			return response.status(error.status).send({ error: error.message });
 		}
 		else if(error.code && error.code.includes("ER_NO_REFERENCED_ROW"))
-		{
 			return response.status(400).send({ error: "The request body was either not present or did not contain a valid Model object." });
-		}
+		else if(error.type && error.type == "entity.parse.failed")
+			return response.status(400).send({ error: "Content-Type parsing error" });
 
 		$log.error(error);
 		return response.status(500).send({ error: "Internal Error" });
