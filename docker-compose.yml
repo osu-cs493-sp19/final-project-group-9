@@ -5,6 +5,26 @@ volumes:
 
 services:
 
+  api:
+    build: .
+    environment:
+      PORT: 8000
+      DB_HOST: db
+      DB_NAME: tarpaulin-db
+      DB_USER: tarpaulin
+      DB_PASS: tarpaulin
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - 8000:8000
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+
   db:
     image: mariadb
     environment:

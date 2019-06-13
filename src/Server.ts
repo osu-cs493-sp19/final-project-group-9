@@ -9,11 +9,19 @@ import RedisStore from "rate-limit-redis";
 import express from "express";
 
 const rootDir = __dirname;
+const PORT = Number(process.env.PORT) || 8080;
+const DB_HOST = process.env.DB_HOST || "localhost";
+const DB_NAME = process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PORT = process.env.DB_PORT || 3306;
+const DB_PASS = process.env.DB_PASS;
+const REDIS_HOST = process.env.REDIS_HOST || "localhost";
+const REDIS_PORT = process.env.REDIS_PORT;
 
 @ServerSettings(
 {
  	rootDir,
-	port: 8080,
+	port: PORT,
 	mount:
 	{
 		"/": `${rootDir}/controllers/**/*.ts`
@@ -35,11 +43,11 @@ const rootDir = __dirname;
 		{
 			"name": "default",
 			"type": "mysql",
-			"host": "localhost",
-			"port": 3306,
-			"username": "tarpaulin",
-			"password": "tarpaulin",
-			"database": "tarpaulin-db",
+			"host": DB_HOST,
+			"port": DB_PORT,
+			"username": DB_USER,
+			"password": DB_PASS,
+			"database": DB_NAME,
 			"synchronize": false,
 			"logging": false,
 			"entities": [`${rootDir}/entities/**/*.ts`],
@@ -50,8 +58,8 @@ const rootDir = __dirname;
 	submissionLocation: `${process.cwd()}/submissions`,
 	redis:
 	{
-		host: "localhost",
-		port: 6379
+		host: REDIS_HOST,
+		port: REDIS_PORT
 	}
 })
 export class Server extends ServerLoader
